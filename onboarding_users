@@ -1,0 +1,53 @@
+
+#!/bin/bash
+
+#automate the creation of new users on your linux server.
+
+CSV_FILE=names.csv
+
+GROUP_NAME=developers
+
+SSH_FOLDER=/etc/skel/.ssh
+
+AUTH=authorized_keys
+
+PASSWORD=password
+
+#conditional for checking if the group exists
+
+if [ $(getent group developers) ];
+then
+    echo group already exists
+else
+    sudo groupadd $GROUP_NAME
+    echo new group developers created successfully
+fi
+
+#add .ssh folder to skel directory
+
+if [ -d "$SSH_FOLDER" ];
+then
+    echo "$SSH_FOLDER" exists
+else
+    sudo mkdir -p $SSH_FOLDER
+    sudo bash -c "cat $AUTH >> $SSH_FOLDER/authorized_keys"
+fi
+
+# create users on the server
+
+while IFS= read USERNAME
+    do
+        if [ $(getent passwd $USERNAME) ];
+        then
+            echo $USERNAME already exists
+        else
+            sudo useradd -m -G $GROUP_NAME $USERNAME #Create the User & add to the developers group
+            sudo echo -e "$PASSWORD\n$PASSWORD" | sudo passwd "$USERNAME" #SET USER PASSWORD
+            sudo passwd -x 5 "{$USERNAME}" # USE passwd -x flag to set MAX_DAYS before password is changed
+            sudo chmod 700 /home/$USERNAME/.ssh
+            sudo chmod 644 /home/$USERNAME/.ssh/authorized_keys
+            echo $USERNAME created successfully
+        fi
+    done < $CSV_FILE
+
+exit 0
