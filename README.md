@@ -187,5 +187,7 @@ remote@ip-address~:$ ./onboarding_users
 
 This is how to use a shell script to automate the creation of multiple users on a remote server.
 
+# **IMPLEMENTATION VIDEO**
+- Link- https://drive.google.com/file/d/1DQDXO2KqMDJYpsCRX3YBqKiWeaWdwVxj/view?usp=sharing
 
 
