@@ -4,7 +4,7 @@ In this project, we use a shell script to automate the creation of multiple user
 
 - We run this project using two virtual instances on aws(ec2). Let one of the servers act as a *client* and let the other act a a *remote* server
 
-- On your client server, create a directory called Shell, and add three files namely:- names.csv, onboarding_users
+- On your client server, create a directory called Shell, and add three files namely:- names.csv, onboarding_users, authorized_keys
 
 ```
 client@ip-address~:$ mkdir Shell & touch names.csv onboarding_users
@@ -84,17 +84,23 @@ bell
 hendo
 gundo
 ```
+- Add your public key to the `authorized_keys` file
 
-- Make your `onboarding_users` script executable by running:
+```
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCzKZyicHxIkklSrNlxsJyyTrcIdBIt84Z0cQb3R4k0jH53kxkaT5hP8tfWTe62LXi7vV86fY+SX7TBNM76XGCbw/6vrMGegm6J1x2i1AiLNwq5nqTjOGn0AIwku4IlCCLAB7tdfRyVuCarmBlwny3lzRyybIUAWXR/D6vpN09MsDILbKdhay+Q/p9OUBMSLPqXdY/QIh/Oe3rVv1lwY3AohNfq7V3tO88zKswfA5iiexNiSYX1myT0OrX8cBE771j9quoNZhQgaLI1mIMtAvnHQChrn9k2nUaO/BMBCQGol5XzGv1ado7hgoVPoluIUD+FGNo/pH4zcmDLICH6drXY/C9MESnkMUPLFxBXKO/OitApY71vRao9nAhAwpVMsy6FqiOb5uawhvhoHYIHTV/f4EtagVagRMP2PxYMYR6jykIV4MPJTkCm+lGhTyMlRu+qRQjdLn8AAtHf4aEV8dIkoGh088DI7eA/4o0wz4OV4upH5ewSFS+5IHmRECEW5Nc=
+```
+
+- Make your `onboarding_users` file an executable script by running:
 
 ```
 client@ip-address~:$ chmod +x onboarding_users
 ```
 
-- Run your Script using `./onboarding_users`
+- Run your Script using `./onboarding_users` and you should get an output like below. This means your script ran without errors and all of the users have been created on the client server.
 
 ```
 client@ip-address~:$ ./onboarding_users
+
 new group developers created successfully
 New password: Retype new password: passwd: password updated successfully
 passwd: password expiry information changed.
@@ -111,12 +117,6 @@ roxanne created successfully
 New password: Retype new password: passwd: password updated successfully
 passwd: password expiry information changed.
 albert created successfully
-useradd: invalid user name 'joe '
-passwd: user 'joe ' does not exist
-passwd: user 'joe ' does not exist
-chmod: cannot access '/home/joe /.ssh': No such file or directory
-chmod: cannot access '/home/joe /.ssh/authorized_keys': No such file or directory
-joe  created successfully
 New password: Retype new password: passwd: password updated successfully
 passwd: password expiry information changed.
 billy created successfully
@@ -146,7 +146,11 @@ passwd: password expiry information changed.
 gundo created successfully
 ```
 
-- Before we can connect to the remote server, we have to update the sshd configuration in /etc/ssh/sshd and set `PasswordAuthentication` to yes on both servers
+- Before we can connect to the remote server and transfer the files, we have to update the sshd configuration in /etc/ssh/sshd_config file and set `PasswordAuthentication` to yes on both servers. use the `vi` command to enter into the file and make the update.
+
+```
+client@ip-address~:$ sudo vi /etc/ssh/sshd_config
+```
 
 - Create a password for your logged in user using the `passwd` command
 
