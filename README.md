@@ -180,7 +180,7 @@ client@ip-address~:$ ssh remote@ip-address
 - Now that we have confirmed that the client server and remote server can connect to each other, we can transfer all of the files unto the remote server using the `scp` command. Secure copy protocol (SCP) is a means of securely transferring computer files between a local host and a remote host or between two remote hosts. 
 
 ```
-client@ip-address~:$ scp -i /home/client/.ssh/authorized_keys remote@ip-address:
+client@ip-address~:$ scp -i /home/client/.ssh/authorized_keys onboarding_users authorized_keys names.csv remote@ip-address:
 
 ```
 - All of the files should have been transferred to the the remote server. You can now run your onboarding_users script to create all the users on your remote server
